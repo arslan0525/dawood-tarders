@@ -46,6 +46,32 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const state = window.state;
 
+    // One-time seed for requested products
+    if (!localStorage.getItem('dawood_seeded_v1')) {
+        const defaultProducts = [
+            { id: Date.now()+1, name: 'OG Cola', category: 'Beverages', variants: ['345ML', '500ML', '1L', '1.5L', '2.25L'] },
+            { id: Date.now()+2, name: 'Baba Juice', category: 'Beverages', variants: ['Standard'] },
+            { id: Date.now()+3, name: 'Baba Juice Chota', category: 'Beverages', variants: ['Standard'] },
+            { id: Date.now()+4, name: 'Juice Anar', category: 'Beverages', variants: ['1L'] },
+            { id: Date.now()+5, name: 'Mango Juice', category: 'Beverages', variants: ['1L'] },
+            { id: Date.now()+6, name: 'Achar', category: 'Grocery', variants: ['Standard'] }
+        ];
+        
+        const existingNames = state.data.products.map(p => p.name.toLowerCase());
+        let changed = false;
+        defaultProducts.forEach(p => {
+            if (!existingNames.includes(p.name.toLowerCase())) {
+                state.data.products.push(p);
+                changed = true;
+            }
+        });
+        
+        if (changed) {
+            localStorage.setItem('dawood_data', JSON.stringify(state.data));
+        }
+        localStorage.setItem('dawood_seeded_v1', 'true');
+    }
+
     window.saveData = () => {
         localStorage.setItem('dawood_data', JSON.stringify(state.data));
     };

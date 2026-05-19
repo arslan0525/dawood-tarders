@@ -20,19 +20,22 @@
 }
 
 body {
-  background-color: var(--bg-color);
+  background-color: #050505;
   color: var(--text-primary);
-  overflow-x: hidden;
+  overflow: hidden;
   overscroll-behavior-y: none;
 }
 
 #app {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  max-width: 480px; /* Strict mobile ratio */
+  height: 100dvh; /* Dynamic viewport height to prevent browser bar issues */
+  margin: 0 auto;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: 120px; /* Safe space for bottom nav */
+  background-color: var(--bg-color);
+  box-shadow: 0 0 30px rgba(0,0,0,0.8);
 }
 
 .fade-in { animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
@@ -82,7 +85,7 @@ select.input-field {
 .header-title { font-size: 28px; font-weight: 800; display:flex; align-items:center; gap:10px; letter-spacing:-0.5px; }
 
 .bottom-nav {
-    position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15, 15, 15, 0.95);
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: rgba(15, 15, 15, 0.95);
     backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
     display: flex; justify-content: space-around; align-items: flex-end;
     padding: 12px 10px calc(12px + env(safe-area-inset-bottom)); 
@@ -143,7 +146,7 @@ select.input-field {
 /* Modals */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: center; align-items: flex-end; padding: 0; animation: fadeBg 0.3s forwards; }
 @keyframes fadeBg { from{opacity:0;} to{opacity:1;} }
-.modal-content { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 30px 30px 0 0; padding: 30px 24px calc(30px + env(safe-area-inset-bottom)); border-top: 1px solid rgba(255,255,255,0.05); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); transform: translateY(100%); animation: slideUp 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+.modal-content { background: var(--card-bg); width: 100%; max-width: 480px; border-radius: 30px 30px 0 0; padding: 30px 24px calc(30px + env(safe-area-inset-bottom)); border-top: 1px solid rgba(255,255,255,0.05); max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); transform: translateY(100%); animation: slideUp 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes slideUp { to { transform: translateY(0); } }
 
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
