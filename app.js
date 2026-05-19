@@ -46,6 +46,198 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const state = window.state;
 
+    // Ensure settings exists
+    if (!state.data.settings) {
+        state.data.settings = {};
+    }
+    if (!state.data.settings.language) {
+        state.data.settings.language = 'ur';
+    }
+
+    const i18n = {
+        ur: {
+            dashboard: "ڈیش بورڈ",
+            installApp: "⬇ ایپ ڈاؤن لوڈ کریں",
+            totalOrders: "کل آرڈرز",
+            totalItems: "کل آئٹمز",
+            pending: "پینڈنگ",
+            delivered: "ڈیلیورڈ",
+            recentOrders: "حالیہ آرڈرز",
+            noOrdersYet: "ابھی تک کوئی آرڈر بک نہیں ہوا۔ بکنگ شروع کریں!",
+            itemsCount: (count) => `${count} آئٹمز`,
+            itemsInventory: "سامان کی لسٹ",
+            addNewItem: "+ نیا آئٹم شامل کریں",
+            noItemsAvailable: "کوئی آئٹم موجود نہیں ہے۔ براہ کرم نیا آئٹم شامل کریں۔",
+            deleteConfirm: "کیا آپ اس آئٹم کو ڈیلیٹ کرنا چاہتے ہیں؟",
+            variantsLabel: "سائز / پیکنگ",
+            orderHistory: "آرڈر ہسٹری",
+            noOrdersHistory: "ابھی تک کوئی آرڈر نہیں ہے۔",
+            qtyLabel: "تعداد",
+            settings: "سیٹنگز",
+            salesmanName: "سیلزمین کا نام",
+            ownerPhone: "مالک کا واٹس ایپ نمبر",
+            phoneHint: "ملک کے کوڈ کے ساتھ لکھیں جیسے +923364459040",
+            resetBtn: "ایپ کا تمام ڈیٹا ڈیلیٹ کریں",
+            resetConfirm: "کیا آپ واقعی تمام ڈیٹا ڈیلیٹ کرنا چاہتے ہیں؟",
+            createOrder: "نیا آرڈر بک کریں",
+            shopNameLabel: "دکان کا نام *",
+            shopNamePlaceholder: "دکان کا نام لکھیں",
+            phoneNumberLabel: "فون نمبر",
+            phoneNumberPlaceholder: "گاہک کا موبائل نمبر",
+            shopAddressLabel: "دکان کا پتہ",
+            shopAddressPlaceholder: "گلی، شہر کا نام...",
+            orderItems: "آرڈر کے آئٹمز",
+            emptyCart: "آرڈر لسٹ خالی ہے۔ نیچے سے آئٹم شامل کریں۔",
+            addItemToOrder: "+ آرڈر میں آئٹم شامل کریں",
+            sendWhatsApp: "واٹس ایپ پر آرڈر بھیجیں",
+            sizeLabel: "سائز",
+            selectItem: "آئٹم منتخب کریں",
+            customItemOption: "+ نیا کسٹم آئٹم...",
+            customItemNameLabel: "کسٹم آئٹم کا نام",
+            customItemNamePlaceholder: "مثلاً لوکل بسکٹ",
+            customSizeLabel: "سائز / پیکنگ (اختیاری)",
+            customSizePlaceholder: "مثلاً 1 ڈبہ",
+            quantity: "تعداد",
+            addToOrder: "آرڈر میں شامل کریں",
+            alertEnterShopName: "براہ کرم دکان کا نام درج کریں",
+            alertMinOneItem: "براہ کرم آرڈر میں کم از کم ایک آرڈر آئٹم شامل کریں",
+            alertEnterItemName: "براہ کرم آئٹم کا نام لکھیں",
+            alertMinOneVariant: "براہ کرم کم از کم ایک سائز یا پیکنگ شامل کریں (مثلاً 1 لٹر، 5 کلو)",
+            alertEnterCustomItemName: "براہ کرم کسٹم آئٹم کا نام درج کریں",
+            homeTab: "ہوم",
+            itemsTab: "آئٹمز",
+            ordersTab: "آرڈرز",
+            settingsTab: "سیٹنگز",
+            installAlert: "ایپ ڈاؤن لوڈ کرنے کا طریقہ:\n\n1. براؤزر کے اوپر دائیں کونے میں موجود مینو (تین نقطوں) پر کلک کریں۔\n2. 'ایپ انسٹال کریں' یا 'ہوم اسکرین پر شامل کریں' کو منتخب کریں۔\n\nاس سے ایپ آپ کے فون پر ڈاؤن لوڈ ہو جائے گی!",
+            whatsappNewBooking: "📦 *نیا آرڈر بکنگ*",
+            whatsappSalesman: "👤 *سیلزمین:*",
+            whatsappShopName: "🏪 *دکان کا نام:*",
+            whatsappPhone: "📞 *فون نمبر:*",
+            whatsappAddress: "📍 *پتہ:*",
+            whatsappOrderDetails: "🛒 *آرڈر کی تفصیل:*",
+            whatsappPrepareDispatch: "🚚 *براہ کرم سامان تیار کر کے ڈیلیور کریں*",
+            whatsappQty: "تعداد",
+            languageLabel: "زبان (Language)",
+            pendingStatus: "پینڈنگ",
+            deliveredStatus: "ڈیلیورڈ",
+            itemVolumeLabel: "سائز / پیکنگ"
+        },
+        en: {
+            dashboard: "Dashboard",
+            installApp: "⬇ Install App",
+            totalOrders: "Total Orders",
+            totalItems: "Total Items",
+            pending: "Pending",
+            delivered: "Delivered",
+            recentOrders: "Recent Orders",
+            noOrdersYet: "No orders yet. Start booking!",
+            itemsCount: (count) => `${count} items`,
+            itemsInventory: "Items Inventory",
+            addNewItem: "+ Add New Item",
+            noItemsAvailable: "No items available. Please add new items.",
+            deleteConfirm: "Delete this item?",
+            variantsLabel: "Variants / Sizes",
+            orderHistory: "Order History",
+            noOrdersHistory: "No orders yet.",
+            qtyLabel: "qty",
+            settings: "Settings",
+            salesmanName: "Salesman Name",
+            ownerPhone: "Owner WhatsApp Number",
+            phoneHint: "Include country code e.g. +923364459040",
+            resetBtn: "Reset All App Data",
+            resetConfirm: "Are you sure you want to delete all data?",
+            createOrder: "Create Order",
+            shopNameLabel: "Shop Name *",
+            shopNamePlaceholder: "Enter Shop Name",
+            phoneNumberLabel: "Phone Number",
+            phoneNumberPlaceholder: "Customer Number",
+            shopAddressLabel: "Shop Address",
+            shopAddressPlaceholder: "Street, City...",
+            orderItems: "Order Items",
+            emptyCart: "Cart is empty. Add items below.",
+            addItemToOrder: "+ Add Item to Order",
+            sendWhatsApp: "Send Order via WhatsApp",
+            sizeLabel: "Size",
+            selectItem: "Select Item",
+            customItemOption: "+ Add Custom Item...",
+            customItemNameLabel: "Custom Item Name",
+            customItemNamePlaceholder: "e.g. Local Biscuits",
+            customSizeLabel: "Size / Variant (Optional)",
+            customSizePlaceholder: "e.g. 1 Box",
+            quantity: "Quantity",
+            addToOrder: "Add to Order",
+            alertEnterShopName: "Please enter Shop Name",
+            alertMinOneItem: "Please add at least one item to the order",
+            alertEnterItemName: "Enter item name",
+            alertMinOneVariant: "Add at least one size/variant (e.g. 1kg, 1L)",
+            alertEnterCustomItemName: "Please enter custom item name",
+            homeTab: "Home",
+            itemsTab: "Items",
+            ordersTab: "Orders",
+            settingsTab: "Settings",
+            installAlert: "App Install Instruction:\n\n1. Tap the browser menu (3 dots at top right).\n2. Select 'Install App' or 'Add to Home screen'.\n\nThis will download the app to your phone!",
+            whatsappNewBooking: "📦 *New Booking*",
+            whatsappSalesman: "👤 *Salesman:*",
+            whatsappShopName: "🏪 *Shop Name:*",
+            whatsappPhone: "📞 *Phone:*",
+            whatsappAddress: "📍 *Address:*",
+            whatsappOrderDetails: "🛒 *Order Details:*",
+            whatsappPrepareDispatch: "🚚 *Please Prepare Dispatch*",
+            whatsappQty: "x",
+            languageLabel: "Language",
+            pendingStatus: "Pending",
+            deliveredStatus: "Delivered",
+            itemVolumeLabel: "Variants / Sizes"
+        }
+    };
+
+    window.t = (key, param) => {
+        const lang = state.data.settings.language || 'ur';
+        const translation = i18n[lang][key];
+        if (typeof translation === 'function') {
+            return translation(param);
+        }
+        return translation || key;
+    };
+    const t = window.t;
+
+    window.setLanguage = (lang) => {
+        state.data.settings.language = lang;
+        saveData();
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ur' ? 'rtl' : 'ltr';
+        updateInstallBannerLang();
+        render();
+    };
+
+    window.toggleLanguage = () => {
+        const current = state.data.settings.language || 'ur';
+        const next = current === 'ur' ? 'en' : 'ur';
+        window.setLanguage(next);
+    };
+
+    const updateInstallBannerLang = () => {
+        const bannerTitle = document.querySelector('#install-banner div div div:first-child');
+        const bannerSub = document.querySelector('#install-banner div div div:last-child');
+        const bannerBtn = document.getElementById('install-btn');
+        if (bannerTitle && bannerSub && bannerBtn) {
+            const lang = state.data.settings.language || 'ur';
+            if (lang === 'ur') {
+                bannerTitle.textContent = "داؤد ٹریڈر ایپ";
+                bannerSub.textContent = "اپنے فون پر انسٹال کریں";
+                bannerBtn.textContent = "انسٹال کریں";
+            } else {
+                bannerTitle.textContent = "Dawood Trader App";
+                bannerSub.textContent = "Install on your device";
+                bannerBtn.textContent = "Install";
+            }
+        }
+    };
+
+    // Set initial document language/direction on load
+    document.documentElement.lang = state.data.settings.language || 'ur';
+    document.documentElement.dir = (state.data.settings.language || 'ur') === 'ur' ? 'rtl' : 'ltr';
+
     // One-time seed for Urdu products
     if (!localStorage.getItem('dawood_seeded_v2')) {
         const defaultProducts = [
@@ -85,19 +277,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const getBottomNav = (activeTab) => `
         <div class="bottom-nav">
             <div class="nav-item ${activeTab === 'dashboard' ? 'active' : ''}" onclick="navigate('dashboard')">
-                <div class="nav-icon icon-home"></div>ہوم
+                <div class="nav-icon icon-home"></div>${t('homeTab')}
             </div>
             <div class="nav-item ${activeTab === 'products' ? 'active' : ''}" onclick="navigate('products')">
-                <div class="nav-icon icon-products"></div>آئٹمز
+                <div class="nav-icon icon-products"></div>${t('itemsTab')}
             </div>
             <div class="nav-item fab" onclick="navigate('new_order')">
                 <div class="nav-icon icon-add"></div>
             </div>
             <div class="nav-item ${activeTab === 'orders' ? 'active' : ''}" onclick="navigate('orders')">
-                <div class="nav-icon icon-order"></div>آرڈرز
+                <div class="nav-icon icon-order"></div>${t('ordersTab')}
             </div>
             <div class="nav-item ${activeTab === 'settings' ? 'active' : ''}" onclick="navigate('settings')">
-                <div class="nav-icon icon-settings"></div>سیٹنگز
+                <div class="nav-icon icon-settings"></div>${t('settingsTab')}
             </div>
         </div>
     `;
@@ -114,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const { outcome } = await window.deferredPrompt.userChoice;
             window.deferredPrompt = null;
         } else {
-            alert("ایپ ڈاؤن لوڈ کرنے کا طریقہ:\n\n1. براؤزر کے اوپر دائیں کونے میں موجود مینو (تین نقطوں) پر کلک کریں۔\n2. 'ایپ انسٹال کریں' یا 'ہوم اسکرین پر شامل کریں' کو منتخب کریں۔\n\nاس سے ایپ آپ کے فون پر ڈاؤن لوڈ ہو جائے گی!");
+            alert(t('installAlert'));
         }
     };
 
@@ -127,9 +319,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return `
             <div class="fade-in">
                 <div class="header" style="flex-wrap: wrap; gap: 10px;">
-                    <div class="header-title">ڈیش بورڈ</div>
+                    <div class="header-title">${t('dashboard')}</div>
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <button onclick="triggerInstall()" style="background:var(--primary-gradient); color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; font-size:12px; box-shadow:0 2px 10px rgba(255,107,43,0.3); cursor:pointer;">⬇ ایپ ڈاؤن لوڈ کریں</button>
+                        <button onclick="toggleLanguage()" style="background:#2c2c2e; color:white; border:1px solid var(--border-color); padding:6px 12px; border-radius:8px; font-weight:600; font-size:12px; cursor:pointer;">
+                            ${state.data.settings.language === 'ur' ? 'English' : 'اردو'}
+                        </button>
+                        <button onclick="triggerInstall()" style="background:var(--primary-gradient); color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; font-size:12px; box-shadow:0 2px 10px rgba(255,107,43,0.3); cursor:pointer;">${t('installApp')}</button>
                         <div style="background:var(--card-bg); padding:6px 12px; border-radius:12px; font-size:13px; font-weight:600; color:var(--primary-color); border:1px solid var(--border-color);">
                             ${state.data.settings.salesmanName}
                         </div>
@@ -138,36 +333,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 <div class="cards-grid">
                     <div class="stat-card">
-                        <div class="stat-title">کل آرڈرز</div>
+                        <div class="stat-title">${t('totalOrders')}</div>
                         <div class="stat-value" style="color:var(--primary-color)">${orders.length}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-title">کل آئٹمز</div>
+                        <div class="stat-title">${t('totalItems')}</div>
                         <div class="stat-value">${products.length}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-title">پینڈنگ</div>
+                        <div class="stat-title">${t('pending')}</div>
                         <div class="stat-value" style="color:var(--warning)">${pendingOrders}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-title">ڈیلیورڈ</div>
+                        <div class="stat-title">${t('delivered')}</div>
                         <div class="stat-value" style="color:var(--success)">${deliveredOrders}</div>
                     </div>
                 </div>
 
                 <div class="list-section">
-                    <div style="font-size:20px; font-weight:800; margin-bottom:16px;">حالیہ آرڈرز</div>
-                    ${orders.length === 0 ? `<div class="empty-state">ابھی تک کوئی آرڈر بک نہیں ہوا۔ بکنگ شروع کریں!</div>` : ''}
+                    <div style="font-size:20px; font-weight:800; margin-bottom:16px;">${t('recentOrders')}</div>
+                    ${orders.length === 0 ? `<div class="empty-state">${t('noOrdersYet')}</div>` : ''}
                     ${orders.slice().reverse().slice(0, 5).map(order => `
                         <div class="list-item">
                             <div style="display:flex; align-items:center; gap:16px;">
                                 <div class="item-icon">${order.shop.charAt(0)}</div>
                                 <div>
                                     <div style="font-weight:700; font-size:16px;">${order.shop}</div>
-                                    <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${order.items.length} آئٹمز • ${order.date}</div>
+                                    <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${t('itemsCount', order.items.length)} • ${order.date}</div>
                                 </div>
                             </div>
-                            <div style="color:var(--primary-color); font-weight:700; font-size:14px;">${order.status === 'Pending' ? 'پینڈنگ' : 'ڈیلیورڈ'}</div>
+                            <div style="color:var(--primary-color); font-weight:700; font-size:14px;">${order.status === 'Pending' ? t('pendingStatus') : t('deliveredStatus')}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -183,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderModal('addProduct');
             };
             window.deleteProduct = (id) => {
-                if(confirm('کیا آپ اس آئٹم کو ڈیلیٹ کرنا چاہتے ہیں؟')) {
+                if(confirm(t('deleteConfirm'))) {
                     state.data.products = state.data.products.filter(p => p.id !== id);
                     saveData();
                     render();
@@ -192,15 +387,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return `
             <div class="fade-in">
                 <div class="header">
-                    <div class="header-title">سامان کی لسٹ</div>
+                    <div class="header-title">${t('itemsInventory')}</div>
                 </div>
                 <div class="list-section" style="padding-top:0">
                     <button class="btn btn-primary" style="margin-bottom:24px;" onclick="openAddProduct()">
                         <div class="icon-add" style="width:20px; height:20px; background:white; -webkit-mask-size:cover; mask-size:cover;"></div>
-                        + نیا آئٹم شامل کریں
+                        ${t('addNewItem')}
                     </button>
                     
-                    ${products.length === 0 ? `<div class="empty-state">کوئی آئٹم موجود نہیں ہے۔ براہ کرم نیا آئٹم شامل کریں۔</div>` : ''}
+                    ${products.length === 0 ? `<div class="empty-state">${t('noItemsAvailable')}</div>` : ''}
                     
                     ${products.map(p => `
                         <div class="list-item product-item">
@@ -209,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="item-icon">${p.name.charAt(0)}</div>
                                     <div>
                                         <div style="font-weight:700; font-size:18px;">${p.name}</div>
-                                        <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">سائز / پیکنگ: ${p.variants.join(', ')}</div>
+                                        <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${t('variantsLabel')}: ${p.variants.join(', ')}</div>
                                     </div>
                                 </div>
                                 <div style="color:var(--danger); font-size:28px; padding:0 10px; cursor:pointer;" onclick="deleteProduct(${p.id})">×</div>
@@ -227,10 +422,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return `
             <div class="fade-in">
                 <div class="header">
-                    <div class="header-title">آرڈر ہسٹری</div>
+                    <div class="header-title">${t('orderHistory')}</div>
                 </div>
                 <div class="list-section" style="padding-top:0">
-                    ${orders.length === 0 ? `<div class="empty-state">ابھی تک کوئی آرڈر نہیں ہے۔</div>` : ''}
+                    ${orders.length === 0 ? `<div class="empty-state">${t('noOrdersHistory')}</div>` : ''}
                     ${orders.slice().reverse().map(order => `
                         <div class="list-item" style="flex-direction:column; align-items:stretch;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
@@ -241,10 +436,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${order.date}</div>
                                     </div>
                                 </div>
-                                <div style="font-weight:700; color:var(--primary-color); font-size:14px;">${order.status === 'Pending' ? 'پینڈنگ' : 'ڈیلیورڈ'}</div>
+                                <div style="font-weight:700; color:var(--primary-color); font-size:14px;">${order.status === 'Pending' ? t('pendingStatus') : t('deliveredStatus')}</div>
                             </div>
                             <div style="background:#2c2c2e; padding:16px; border-radius:12px; font-size:14px; line-height:1.8;">
-                                ${order.items.map(i => `<div style="font-weight:500;">• ${i.productName} ${i.variant ? '('+i.variant+')' : ''} تعداد: ${i.qty}</div>`).join('')}
+                                ${order.items.map(i => `<div style="font-weight:500;">• ${i.productName} ${i.variant ? '('+i.variant+')' : ''} ${t('qtyLabel')}: ${i.qty}</div>`).join('')}
                             </div>
                         </div>
                     `).join('')}
@@ -257,25 +452,32 @@ document.addEventListener('DOMContentLoaded', () => {
         settings: () => `
             <div class="fade-in">
                 <div class="header">
-                    <div class="header-title">سیٹنگز</div>
+                    <div class="header-title">${t('settings')}</div>
                 </div>
                 <div class="list-section">
                     <div class="input-group">
-                        <label class="input-label">سیلزمین کا نام</label>
+                        <label class="input-label">${t('languageLabel')}</label>
+                        <select class="input-field" onchange="setLanguage(this.value)">
+                            <option value="ur" ${state.data.settings.language === 'ur' ? 'selected' : ''}>اردو (Urdu)</option>
+                            <option value="en" ${state.data.settings.language === 'en' ? 'selected' : ''}>English</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">${t('salesmanName')}</label>
                         <input type="text" class="input-field" value="${state.data.settings.salesmanName}" onchange="state.data.settings.salesmanName=this.value; saveData();" />
                     </div>
                     <div class="input-group">
-                        <label class="input-label">مالک کا واٹس ایپ نمبر</label>
+                        <label class="input-label">${t('ownerPhone')}</label>
                         <input type="tel" class="input-field" value="${state.data.settings.ownerPhone}" onchange="state.data.settings.ownerPhone=this.value; saveData();" />
-                        <div style="font-size:12px; color:var(--text-secondary); margin-top:8px;">ملک کے کوڈ کے ساتھ لکھیں جیسے +923364459040</div>
+                        <div style="font-size:12px; color:var(--text-secondary); margin-top:8px;">${t('phoneHint')}</div>
                     </div>
                     
                     <button class="btn btn-danger" style="margin-top:40px;" onclick="
-                        if(confirm('کیا آپ واقعی تمام ڈیٹا ڈیلیٹ کرنا چاہتے ہیں؟')) {
+                        if(confirm(t('resetConfirm'))) {
                             localStorage.removeItem('dawood_data');
                             window.location.reload();
                         }
-                    ">ایپ کا تمام ڈیٹا ڈیلیٹ کریں</button>
+                    ">${t('resetBtn')}</button>
                 </div>
             </div>
             ${getBottomNav('settings')}
@@ -306,20 +508,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const shopPhone = document.getElementById('shop-phone').value.trim();
                 const address = document.getElementById('shop-address').value.trim();
                 
-                if(!shopName) return alert("براہ کرم دکان کا نام درج کریں");
-                if(state.cart.length === 0) return alert("براہ کرم آرڈر میں کم از کم ایک آئٹم شامل کریں");
+                if(!shopName) return alert(t('alertEnterShopName'));
+                if(state.cart.length === 0) return alert(t('alertMinOneItem'));
                 
-                let text = "📦 *نیا آرڈر بکنگ*\n\n";
-                text += "👤 *سیلزمین:* " + state.data.settings.salesmanName + "\n\n";
-                text += "🏪 *دکان کا نام:*\n" + shopName + "\n\n";
-                if(shopPhone) text += "📞 *فون نمبر:*\n" + shopPhone + "\n\n";
-                if(address) text += "📍 *پتہ:*\n" + address + "\n\n";
+                let text = t('whatsappNewBooking') + "\n\n";
+                text += t('whatsappSalesman') + " " + state.data.settings.salesmanName + "\n\n";
+                text += t('whatsappShopName') + "\n" + shopName + "\n\n";
+                if(shopPhone) text += t('whatsappPhone') + "\n" + shopPhone + "\n\n";
+                if(address) text += t('whatsappAddress') + "\n" + address + "\n\n";
                 
-                text += "🛒 *آرڈر کی تفصیل:*\n";
+                text += t('whatsappOrderDetails') + "\n";
                 state.cart.forEach((item) => {
-                    text += "• " + item.productName + " " + (item.variant ? '('+item.variant+')' : '') + " تعداد: " + item.qty + "\n";
+                    text += "• " + item.productName + " " + (item.variant ? '('+item.variant+')' : '') + " " + t('whatsappQty') + ": " + item.qty + "\n";
                 });
-                text += "\n🚚 *براہ کرم سامان تیار کر کے ڈیلیور کریں*";
+                text += "\n" + t('whatsappPrepareDispatch');
 
                 const newOrder = {
                     id: Date.now().toString().slice(-4),
@@ -355,31 +557,31 @@ document.addEventListener('DOMContentLoaded', () => {
             return `
             <div class="fade-in">
                 <div class="header">
-                    <div class="header-title">نیا آرڈر بک کریں</div>
+                    <div class="header-title">${t('createOrder')}</div>
                 </div>
                 <div class="list-section" style="padding-top:0">
                     <div class="input-group">
-                        <label class="input-label">دکان کا نام *</label>
-                        <input type="text" id="shop-name" class="input-field" placeholder="دکان کا نام لکھیں" value="${state.orderForm.shopName}" oninput="state.orderForm.shopName = this.value" />
+                        <label class="input-label">${t('shopNameLabel')}</label>
+                        <input type="text" id="shop-name" class="input-field" placeholder="${t('shopNamePlaceholder')}" value="${state.orderForm.shopName}" oninput="state.orderForm.shopName = this.value" />
                     </div>
                     <div class="input-group">
-                        <label class="input-label">فون نمبر</label>
-                        <input type="tel" id="shop-phone" class="input-field" placeholder="گاہک کا موبائل نمبر" value="${state.orderForm.shopPhone}" oninput="state.orderForm.shopPhone = this.value" />
+                        <label class="input-label">${t('phoneNumberLabel')}</label>
+                        <input type="tel" id="shop-phone" class="input-field" placeholder="${t('phoneNumberPlaceholder')}" value="${state.orderForm.shopPhone}" oninput="state.orderForm.shopPhone = this.value" />
                     </div>
                     <div class="input-group">
-                        <label class="input-label">دکان کا پتہ</label>
-                        <input type="text" id="shop-address" class="input-field" placeholder="گلی، شہر کا نام..." value="${state.orderForm.address}" oninput="state.orderForm.address = this.value" />
+                        <label class="input-label">${t('shopAddressLabel')}</label>
+                        <input type="text" id="shop-address" class="input-field" placeholder="${t('shopAddressPlaceholder')}" value="${state.orderForm.address}" oninput="state.orderForm.address = this.value" />
                     </div>
 
-                    <div style="margin: 32px 0 16px; font-size:18px; font-weight:800; color:var(--text-primary)">آرڈر کے آئٹمز</div>
+                    <div style="margin: 32px 0 16px; font-size:18px; font-weight:800; color:var(--text-primary)">${t('orderItems')}</div>
 
-                    ${state.cart.length === 0 ? `<div class="empty-state" style="padding:30px; border:2px dashed #3a3a3c; border-radius:16px; margin-bottom:20px;">آرڈر لسٹ خالی ہے۔ نیچے سے آئٹم شامل کریں۔</div>` : ''}
+                    ${state.cart.length === 0 ? `<div class="empty-state" style="padding:30px; border:2px dashed #3a3a3c; border-radius:16px; margin-bottom:20px;">${t('emptyCart')}</div>` : ''}
 
                     ${state.cart.map((item, idx) => `
                         <div class="order-item-card fade-in">
                             <div class="remove-item" onclick="removeFromCart(${idx})">×</div>
-                            <div style="font-weight:700; font-size:18px; margin-bottom:4px; padding-left:30px;">${item.productName}</div>
-                            ${item.variant ? `<div style="font-size:14px; color:var(--text-secondary); margin-bottom:16px; font-weight:500;">سائز: ${item.variant}</div>` : `<div style="height:16px;"></div>`}
+                            <div style="font-weight:700; font-size:18px; margin-bottom:4px; ${state.data.settings.language === 'ur' ? 'padding-left:30px;' : 'padding-right:30px;'}">${item.productName}</div>
+                            ${item.variant ? `<div style="font-size:14px; color:var(--text-secondary); margin-bottom:16px; font-weight:500;">${t('sizeLabel')}: ${item.variant}</div>` : `<div style="height:16px;"></div>`}
                             <div class="qty-control">
                                 <button class="qty-btn" onclick="updateCartQty(${idx}, -1)">-</button>
                                 <div class="qty-val">${item.qty}</div>
@@ -389,12 +591,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     `).join('')}
 
                     <button class="btn btn-secondary" onclick="openProductSelector()" style="margin-bottom: 30px;">
-                        + آرڈر میں آئٹم شامل کریں
+                        ${t('addItemToOrder')}
                     </button>
 
                     <button class="btn btn-primary" onclick="sendWhatsApp()">
                         <div class="icon-whatsapp"></div>
-                        واٹس ایپ پر آرڈر بھیجیں
+                        ${t('sendWhatsApp')}
                     </button>
                 </div>
             </div>
@@ -419,8 +621,8 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             window.saveProduct = () => {
                 const name = document.getElementById('product-name').value.trim();
-                if(!name) return alert("براہ کرم آئٹم کا نام لکھیں");
-                if(state.tempProduct.variants.length === 0) return alert("براہ کرم کم از کم ایک سائز یا پیکنگ شامل کریں (مثلاً 1 لٹر، 5 کلو)");
+                if(!name) return alert(t('alertEnterItemName'));
+                if(state.tempProduct.variants.length === 0) return alert(t('alertMinOneVariant'));
                 
                 state.tempProduct.name = name;
                 state.data.products.push(state.tempProduct);
@@ -433,18 +635,18 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="modal-overlay">
                 <div class="modal-content fade-in">
                     <div class="modal-header">
-                        <div class="modal-title">نیا آئٹم شامل کریں</div>
+                        <div class="modal-title">${t('addNewItem')}</div>
                         <div class="modal-close" onclick="closeModal()">×</div>
                     </div>
                     <div class="input-group">
-                        <label class="input-label">آئٹم کا نام (مثلاً پیپسی، چینی)</label>
-                        <input type="text" id="product-name" class="input-field" placeholder="نام لکھیں" value="${state.tempProduct.name}">
+                        <label class="input-label">${state.data.settings.language === 'ur' ? 'آئٹم کا نام (مثلاً پیپسی، چینی)' : 'Item Name (e.g. Pepsi, Sugar)'}</label>
+                        <input type="text" id="product-name" class="input-field" placeholder="${state.data.settings.language === 'ur' ? 'نام لکھیں' : 'Name'}" value="${state.tempProduct.name}">
                     </div>
                     <div class="input-group">
-                        <label class="input-label">سائز / پیکنگ</label>
+                        <label class="input-label">${t('itemVolumeLabel')}</label>
                         <div style="display:flex; gap:10px;">
-                            <input type="text" id="variant-input" class="input-field" placeholder="مثلاً 1.5 لٹر، 5 کلو">
-                            <button class="btn btn-secondary btn-small" onclick="addVariant()">شامل کریں</button>
+                            <input type="text" id="variant-input" class="input-field" placeholder="${state.data.settings.language === 'ur' ? 'مثلاً 1.5 لٹر، 5 کلو' : 'e.g. 1.5 L, 5 kg'}">
+                            <button class="btn btn-secondary btn-small" onclick="addVariant()">${state.data.settings.language === 'ur' ? 'شامل کریں' : 'Add'}</button>
                         </div>
                     </div>
                     <div style="margin-bottom:24px;">
@@ -454,7 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         `).join('')}
                     </div>
-                    <button class="btn btn-primary" onclick="saveProduct()">Save Item</button>
+                    <button class="btn btn-primary" onclick="saveProduct()">${state.data.settings.language === 'ur' ? 'آئٹم محفوظ کریں' : 'Save Item'}</button>
                 </div>
             </div>
             `;
@@ -485,7 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const customName = document.getElementById('custom-name').value.trim();
                     const customVariant = document.getElementById('custom-variant').value.trim();
                     
-                    if (!customName) return alert("براہ کرم کسٹم آئٹم کا نام درج کریں");
+                    if (!customName) return alert(t('alertEnterCustomItemName'));
                     
                     state.cart.push({
                         productName: customName,
@@ -507,26 +709,26 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="modal-overlay">
                 <div class="modal-content fade-in">
                     <div class="modal-header">
-                        <div class="modal-title">آئٹم منتخب کریں</div>
+                        <div class="modal-title">${t('selectItem')}</div>
                         <div class="modal-close" onclick="closeModal()">×</div>
                     </div>
                     
                     <div class="input-group">
-                        <label class="input-label">آئٹم</label>
+                        <label class="input-label">${state.data.settings.language === 'ur' ? 'آئٹم' : 'Item'}</label>
                         <select class="input-field" onchange="changeProduct(parseInt(this.value))">
                             ${products.map((prod, idx) => `<option value="${idx}" ${!selection.isCustom && idx === pIndex ? 'selected' : ''}>${prod.name}</option>`).join('')}
-                            <option value="-1" ${selection.isCustom ? 'selected' : ''} style="font-weight:bold;">+ نیا کسٹم آئٹم...</option>
+                            <option value="-1" ${selection.isCustom ? 'selected' : ''} style="font-weight:bold;">${t('customItemOption')}</option>
                         </select>
                     </div>
 
                     ${selection.isCustom ? `
                         <div class="input-group fade-in">
-                            <label class="input-label">کسٹم آئٹم کا نام</label>
-                            <input type="text" id="custom-name" class="input-field" placeholder="مثلاً لوکل بسکٹ">
+                            <label class="input-label">${t('customItemNameLabel')}</label>
+                            <input type="text" id="custom-name" class="input-field" placeholder="${t('customItemNamePlaceholder')}">
                         </div>
                         <div class="input-group fade-in">
-                            <label class="input-label">سائز / پیکنگ (اختیاری)</label>
-                            <input type="text" id="custom-variant" class="input-field" placeholder="مثلاً 1 ڈبہ">
+                            <label class="input-label">${t('customSizeLabel')}</label>
+                            <input type="text" id="custom-variant" class="input-field" placeholder="${t('customSizePlaceholder')}">
                         </div>
                     ` : `
                         <div class="input-group fade-in">
@@ -565,6 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const render = () => {
+        updateInstallBannerLang();
         let html = '';
         const screenRenderer = screens[state.currentScreen];
         if (screenRenderer) html += screenRenderer();
