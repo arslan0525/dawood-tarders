@@ -76,6 +76,22 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
+    window.deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        window.deferredPrompt = e;
+    });
+
+    window.triggerInstall = async () => {
+        if (window.deferredPrompt) {
+            window.deferredPrompt.prompt();
+            const { outcome } = await window.deferredPrompt.userChoice;
+            window.deferredPrompt = null;
+        } else {
+            alert("App Install Instruction:\n\n1. Tap the browser menu (3 dots at top right).\n2. Select 'Install App' or 'Add to Home screen'.\n\nThis will download the app to your phone!");
+        }
+    };
+
     const screens = {
         dashboard: () => {
             const { orders, products } = state.data;
@@ -84,10 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             return `
             <div class="fade-in">
-                <div class="header">
+                <div class="header" style="flex-wrap: wrap; gap: 10px;">
                     <div class="header-title">Dashboard</div>
-                    <div style="background:var(--card-bg); padding:6px 12px; border-radius:12px; font-size:13px; font-weight:600; color:var(--primary-color); border:1px solid var(--border-color);">
-                        ${state.data.settings.salesmanName}
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button onclick="triggerInstall()" style="background:var(--primary-gradient); color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; font-size:12px; box-shadow:0 2px 10px rgba(255,107,43,0.3); cursor:pointer;">⬇ Install App</button>
+                        <div style="background:var(--card-bg); padding:6px 12px; border-radius:12px; font-size:13px; font-weight:600; color:var(--primary-color); border:1px solid var(--border-color);">
+                            ${state.data.settings.salesmanName}
+                        </div>
                     </div>
                 </div>
                 
