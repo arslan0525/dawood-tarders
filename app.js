@@ -294,6 +294,34 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
+    const getHeader = (title, showExtra = false) => {
+        const lang = state.data.settings.language || 'ur';
+        if (showExtra) {
+            return `
+            <div class="header" style="flex-wrap: wrap; gap: 10px; display:flex; justify-content:space-between; align-items:center; width:100%;">
+                <div class="header-title">${title}</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button onclick="toggleLanguage()" style="background:#2c2c2e; color:white; border:1px solid var(--border-color); padding:8px 14px; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer;">
+                        ${lang === 'ur' ? 'English' : 'اردو'}
+                    </button>
+                    <button onclick="triggerInstall()" style="background:var(--primary-gradient); color:white; border:none; padding:8px 14px; border-radius:10px; font-weight:bold; font-size:13px; box-shadow:0 2px 10px rgba(255,107,43,0.3); cursor:pointer;">${t('installApp')}</button>
+                    <div style="background:var(--card-bg); padding:8px 14px; border-radius:12px; font-size:13px; font-weight:700; color:var(--primary-color); border:1px solid var(--border-color);">
+                        ${state.data.settings.salesmanName}
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+        return `
+        <div class="header" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+            <div class="header-title">${title}</div>
+            <button onclick="toggleLanguage()" style="background:#2c2c2e; color:white; border:1px solid var(--border-color); padding:8px 14px; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer;">
+                ${lang === 'ur' ? 'English' : 'اردو'}
+            </button>
+        </div>
+        `;
+    };
+
     window.deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -318,18 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             return `
             <div class="fade-in">
-                <div class="header" style="flex-wrap: wrap; gap: 10px;">
-                    <div class="header-title">${t('dashboard')}</div>
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <button onclick="toggleLanguage()" style="background:#2c2c2e; color:white; border:1px solid var(--border-color); padding:6px 12px; border-radius:8px; font-weight:600; font-size:12px; cursor:pointer;">
-                            ${state.data.settings.language === 'ur' ? 'English' : 'اردو'}
-                        </button>
-                        <button onclick="triggerInstall()" style="background:var(--primary-gradient); color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; font-size:12px; box-shadow:0 2px 10px rgba(255,107,43,0.3); cursor:pointer;">${t('installApp')}</button>
-                        <div style="background:var(--card-bg); padding:6px 12px; border-radius:12px; font-size:13px; font-weight:600; color:var(--primary-color); border:1px solid var(--border-color);">
-                            ${state.data.settings.salesmanName}
-                        </div>
-                    </div>
-                </div>
+                ${getHeader(t('dashboard'), true)}
                 
                 <div class="cards-grid">
                     <div class="stat-card">
@@ -386,9 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             return `
             <div class="fade-in">
-                <div class="header">
-                    <div class="header-title">${t('itemsInventory')}</div>
-                </div>
+                ${getHeader(t('itemsInventory'))}
                 <div class="list-section" style="padding-top:0">
                     <button class="btn btn-primary" style="margin-bottom:24px;" onclick="openAddProduct()">
                         <div class="icon-add" style="width:20px; height:20px; background:white; -webkit-mask-size:cover; mask-size:cover;"></div>
@@ -421,9 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const { orders } = state.data;
             return `
             <div class="fade-in">
-                <div class="header">
-                    <div class="header-title">${t('orderHistory')}</div>
-                </div>
+                ${getHeader(t('orderHistory'))}
                 <div class="list-section" style="padding-top:0">
                     ${orders.length === 0 ? `<div class="empty-state">${t('noOrdersHistory')}</div>` : ''}
                     ${orders.slice().reverse().map(order => `
@@ -451,17 +464,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         settings: () => `
             <div class="fade-in">
-                <div class="header">
-                    <div class="header-title">${t('settings')}</div>
-                </div>
+                ${getHeader(t('settings'))}
                 <div class="list-section">
-                    <div class="input-group">
-                        <label class="input-label">${t('languageLabel')}</label>
-                        <select class="input-field" onchange="setLanguage(this.value)">
-                            <option value="ur" ${state.data.settings.language === 'ur' ? 'selected' : ''}>اردو (Urdu)</option>
-                            <option value="en" ${state.data.settings.language === 'en' ? 'selected' : ''}>English</option>
-                        </select>
-                    </div>
                     <div class="input-group">
                         <label class="input-label">${t('salesmanName')}</label>
                         <input type="text" class="input-field" value="${state.data.settings.salesmanName}" onchange="state.data.settings.salesmanName=this.value; saveData();" />
@@ -556,9 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             return `
             <div class="fade-in">
-                <div class="header">
-                    <div class="header-title">${t('createOrder')}</div>
-                </div>
+                ${getHeader(t('createOrder'))}
                 <div class="list-section" style="padding-top:0">
                     <div class="input-group">
                         <label class="input-label">${t('shopNameLabel')}</label>
