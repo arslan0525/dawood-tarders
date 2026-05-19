@@ -145,8 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `).join('')}
                 </div>
-                ${getBottomNav('dashboard')}
             </div>
+            ${getBottomNav('dashboard')}
             `;
         },
 
@@ -191,8 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `).join('')}
                 </div>
-                ${getBottomNav('products')}
             </div>
+            ${getBottomNav('products')}
             `;
         },
 
@@ -223,8 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `).join('')}
                 </div>
-                ${getBottomNav('orders')}
             </div>
+            ${getBottomNav('orders')}
             `;
         },
 
@@ -251,8 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     ">Reset All App Data</button>
                 </div>
-                ${getBottomNav('settings')}
             </div>
+            ${getBottomNav('settings')}
         `,
 
         new_order: () => {
@@ -373,8 +373,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         Send Order via WhatsApp
                     </button>
                 </div>
-                ${getBottomNav('new_order')}
             </div>
+            ${getBottomNav('new_order')}
             `;
         }
     };
