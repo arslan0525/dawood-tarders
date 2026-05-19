@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
 
-    // Default Settings & Data
     const defaultData = {
         products: [],
         orders: [],
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Initialize LocalStorage if empty
     if (!localStorage.getItem('dawood_data')) {
         localStorage.setItem('dawood_data', JSON.stringify(defaultData));
     }
@@ -23,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         orderForm: { shopName: '', shopPhone: '', address: '' },
         modal: null,
         tempProduct: { name: '', category: '', variants: [] },
-        tempOrderSelection: { productIndex: -1, variant: '', qty: 1 }
+        tempOrderSelection: { productIndex: -1, variant: '', qty: 1, isCustom: false, customName: '', customVariant: '' }
     };
 
     const saveData = () => {
@@ -40,14 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="nav-item ${activeTab === 'dashboard' ? 'active' : ''}" onclick="navigate('dashboard')">
                 <div class="nav-icon icon-home"></div>Home
             </div>
-            <div class="nav-item ${activeTab === 'orders' ? 'active' : ''}" onclick="navigate('orders')">
-                <div class="nav-icon icon-order"></div>Orders
+            <div class="nav-item ${activeTab === 'products' ? 'active' : ''}" onclick="navigate('products')">
+                <div class="nav-icon icon-products"></div>Items
             </div>
             <div class="nav-item fab" onclick="navigate('new_order')">
                 <div class="nav-icon icon-add"></div>
             </div>
-            <div class="nav-item ${activeTab === 'products' ? 'active' : ''}" onclick="navigate('products')">
-                <div class="nav-icon icon-products"></div>Products
+            <div class="nav-item ${activeTab === 'orders' ? 'active' : ''}" onclick="navigate('orders')">
+                <div class="nav-icon icon-order"></div>Orders
             </div>
             <div class="nav-item ${activeTab === 'settings' ? 'active' : ''}" onclick="navigate('settings')">
                 <div class="nav-icon icon-settings"></div>Settings
@@ -58,10 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const screens = {
         dashboard: () => {
             const { orders, products } = state.data;
-            const totalOrders = orders.length;
             const pendingOrders = orders.filter(o => o.status === 'Pending').length;
             const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
-            const totalProducts = products.length;
 
             return `
             <div class="fade-in">
@@ -75,11 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="cards-grid">
                     <div class="stat-card">
                         <div class="stat-title">Total Orders</div>
-                        <div class="stat-value" style="color:var(--primary-color)">${totalOrders}</div>
+                        <div class="stat-value" style="color:var(--primary-color)">${orders.length}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-title">Total Products</div>
-                        <div class="stat-value">${totalProducts}</div>
+                        <div class="stat-title">Total Items</div>
+                        <div class="stat-value">${products.length}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-title">Pending</div>
@@ -93,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <div class="list-section">
                     <div class="list-title" style="margin-bottom:16px;">Recent Orders</div>
-                    ${totalOrders === 0 ? `<div class="empty-state">No orders yet. Start booking!</div>` : ''}
+                    ${orders.length === 0 ? `<div class="empty-state">No orders yet. Start booking!</div>` : ''}
                     ${orders.slice().reverse().slice(0, 5).map(order => `
                         <div class="list-item">
                             <div style="display:flex; align-items:center; gap:12px;">
@@ -103,9 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">${order.items.length} items • ${order.date}</div>
                                 </div>
                             </div>
-                            <div style="text-align:right;">
-                                <div style="color:var(--primary-color); font-weight:600; font-size:13px; margin-top:4px;">${order.status}</div>
-                            </div>
+                            <div style="color:var(--primary-color); font-weight:600; font-size:13px;">${order.status}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -116,13 +110,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         products: () => {
             const { products } = state.data;
+            window.openAddProduct = () => {
+                state.tempProduct = { id: Date.now(), name: '', category: '', variants: [] };
+                renderModal('addProduct');
+            };
+            window.deleteProduct = (id) => {
+                if(confirm('Delete this item?')) {
+                    state.data.products = state.data.products.filter(p => p.id !== id);
+                    saveData();
+                    render();
+                }
+            };
             return `
             <div class="fade-in">
                 <div class="header">
-                    <div class="header-title">Product Catalog</div>
+                    <div class="header-title">Items / Products</div>
                 </div>
                 <div class="list-section" style="padding-top:0">
-                    ${products.length === 0 ? `<div class="empty-state">No products found. Add products in Settings > Manage Products.</div>` : ''}
+                    <button class="btn btn-primary" style="margin-bottom:20px;" onclick="openAddProduct()">
+                        <div class="icon-add" style="width:20px; height:20px; background:white; -webkit-mask-size:cover; mask-size:cover;"></div>
+                        Add New Item
+                    </button>
+                    
+                    ${products.length === 0 ? `<div class="empty-state">No items available. Please add new items.</div>` : ''}
+                    
                     ${products.map(p => `
                         <div class="list-item product-item">
                             <div class="product-header">
@@ -130,12 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="item-icon">${p.name.charAt(0)}</div>
                                     <div>
                                         <div style="font-weight:600; font-size:16px;">${p.name}</div>
-                                        <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">Category: ${p.category || 'General'}</div>
+                                        <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">Variants: ${p.variants.join(', ')}</div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="variant-chips" style="margin-left:56px; margin-bottom:0;">
-                                ${p.variants.map(v => `<div class="chip">${v}</div>`).join('')}
+                                <div style="color:var(--danger); font-size:24px; padding:0 10px; cursor:pointer;" onclick="deleteProduct(${p.id})">×</div>
                             </div>
                         </div>
                     `).join('')}
@@ -166,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                                 <div style="font-weight:600; color:var(--primary-color); font-size:13px;">${order.status}</div>
                             </div>
-                            <div style="background:var(--bg-color); padding:10px; border-radius:8px; font-size:13px;">
+                            <div style="background:var(--bg-color); padding:10px; border-radius:8px; font-size:13px; line-height:1.6;">
                                 ${order.items.map(i => `<div>• ${i.productName} (${i.variant}) x${i.qty}</div>`).join('')}
                             </div>
                         </div>
@@ -193,11 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">Include country code e.g. 923364459040</div>
                     </div>
                     
-                    <button class="btn btn-secondary" style="margin: 24px 0 16px; border-color:var(--primary-color); color:var(--primary-color)" onclick="navigate('manage_products')">
-                        Manage Products & Variants
-                    </button>
-
-                    <button class="btn btn-danger" onclick="
+                    <button class="btn btn-danger" style="margin-top:40px;" onclick="
                         if(confirm('Are you sure you want to delete all data?')) {
                             localStorage.removeItem('dawood_data');
                             window.location.reload();
@@ -208,50 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `,
 
-        manage_products: () => {
-            window.openAddProduct = () => {
-                state.tempProduct = { id: Date.now(), name: '', category: '', variants: [] };
-                renderModal('addProduct');
-            };
-            window.deleteProduct = (id) => {
-                if(confirm('Delete this product?')) {
-                    state.data.products = state.data.products.filter(p => p.id !== id);
-                    saveData();
-                    render();
-                }
-            };
-            return `
-            <div class="fade-in">
-                <div class="header">
-                    <div class="header-title">
-                        <span class="back-btn" onclick="navigate('settings')">←</span>
-                        Manage Products
-                    </div>
-                </div>
-                <div class="list-section" style="padding-top:0">
-                    <button class="btn btn-primary" style="margin-bottom:20px;" onclick="openAddProduct()">+ Add New Product</button>
-                    
-                    ${state.data.products.length === 0 ? `<div class="empty-state">No products added. Add products to show in order screen.</div>` : ''}
-                    
-                    ${state.data.products.map(p => `
-                        <div class="list-item product-item">
-                            <div class="product-header">
-                                <div>
-                                    <div style="font-weight:600; font-size:16px;">${p.name}</div>
-                                    <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">Variants: ${p.variants.join(', ')}</div>
-                                </div>
-                                <div style="color:var(--danger); font-size:20px; cursor:pointer; padding:5px;" onclick="deleteProduct(${p.id})">×</div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-            `;
-        },
-
         new_order: () => {
-            const { products } = state.data;
-
             window.updateCartQty = (idx, delta) => {
                 if(state.cart[idx].qty + delta > 0) {
                     state.cart[idx].qty += delta;
@@ -264,18 +226,17 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             
             window.openProductSelector = () => {
-                if(products.length === 0) {
-                    alert('Please add products from Settings first.');
-                    return;
+                state.tempOrderSelection = { productIndex: 0, variant: '', qty: 1, isCustom: state.data.products.length === 0, customName: '', customVariant: '' };
+                if (state.data.products.length > 0) {
+                    state.tempOrderSelection.variant = state.data.products[0].variants[0];
                 }
-                state.tempOrderSelection = { productIndex: 0, variant: products[0].variants[0], qty: 1 };
                 renderModal('selectProduct');
             };
 
             window.sendWhatsApp = () => {
                 const { shopName, shopPhone, address } = state.orderForm;
                 if(!shopName) return alert("Please enter Shop Name");
-                if(state.cart.length === 0) return alert("Please add at least one product");
+                if(state.cart.length === 0) return alert("Please add at least one item");
                 
                 let text = `📦 *New Booking*%0A%0A`;
                 text += `👤 *Salesman:* ${state.data.settings.salesmanName}%0A%0A`;
@@ -285,11 +246,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 text += `🛒 *Order Details:*%0A`;
                 state.cart.forEach((item) => {
-                    text += `• ${item.productName} ${item.variant} x${item.qty}%0A`;
+                    text += `• ${item.productName} ${item.variant ? '('+item.variant+')' : ''} x${item.qty}%0A`;
                 });
                 text += `%0A🚚 *Please Prepare Dispatch*`;
 
-                // Save Order
                 const newOrder = {
                     id: Date.now().toString().slice(-4),
                     shop: shopName,
@@ -302,7 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 state.data.orders.push(newOrder);
                 saveData();
 
-                // Clean Cart
                 state.cart = [];
                 state.orderForm = { shopName: '', shopPhone: '', address: '' };
                 
@@ -331,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <input type="text" class="input-field" placeholder="Street, City..." value="${state.orderForm.address}" onchange="state.orderForm.address = this.value" />
                     </div>
 
-                    <div style="margin: 24px 0 16px; font-size:16px; font-weight:700; color:var(--primary-color)">Selected Products</div>
+                    <div style="margin: 24px 0 16px; font-size:16px; font-weight:700; color:var(--primary-color)">Selected Items</div>
 
                     ${state.cart.length === 0 ? `<div class="empty-state" style="padding:20px; border:1px dashed var(--border-color); border-radius:12px; margin-bottom:16px;">Cart is empty</div>` : ''}
 
@@ -339,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="order-item-card fade-in">
                             <div class="remove-item" onclick="removeFromCart(${idx})">×</div>
                             <div style="font-weight:600; font-size:16px; margin-bottom:4px;">${item.productName}</div>
-                            <div style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Size/Variant: ${item.variant}</div>
+                            ${item.variant ? `<div style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Size: ${item.variant}</div>` : `<div style="height:12px;"></div>`}
                             <div class="qty-control">
                                 <button class="qty-btn" onclick="updateCartQty(${idx}, -1)">-</button>
                                 <div class="qty-val">${item.qty}</div>
@@ -349,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `).join('')}
 
                     <button class="btn btn-secondary" onclick="openProductSelector()" style="margin-bottom: 30px;">
-                        + Add Product to Order
+                        + Add Item to Order
                     </button>
 
                     <button class="btn btn-primary" onclick="sendWhatsApp()">
@@ -378,8 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderModal('addProduct');
             };
             window.saveProduct = () => {
-                if(!state.tempProduct.name) return alert("Enter product name");
-                if(state.tempProduct.variants.length === 0) return alert("Add at least one variant");
+                if(!state.tempProduct.name) return alert("Enter item name");
+                if(state.tempProduct.variants.length === 0) return alert("Add at least one size/variant (e.g. 1kg, 1L)");
                 state.data.products.push(state.tempProduct);
                 saveData();
                 closeModal();
@@ -390,21 +349,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="modal-overlay">
                 <div class="modal-content fade-in">
                     <div class="modal-header">
-                        <div class="modal-title">Add New Product</div>
+                        <div class="modal-title">Add New Item</div>
                         <div class="modal-close" onclick="closeModal()">×</div>
                     </div>
                     <div class="input-group">
-                        <label class="input-label">Product Name (e.g. Pepsi, Sugar)</label>
+                        <label class="input-label">Item Name (e.g. Pepsi, Sugar)</label>
                         <input type="text" class="input-field" value="${state.tempProduct.name}" onchange="state.tempProduct.name=this.value">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Category (Optional)</label>
-                        <input type="text" class="input-field" value="${state.tempProduct.category}" onchange="state.tempProduct.category=this.value">
                     </div>
                     <div class="input-group">
                         <label class="input-label">Variants / Sizes</label>
                         <div style="display:flex; gap:10px;">
-                            <input type="text" id="variant-input" class="input-field" placeholder="e.g. 1.5 Liter, 5kg" style="padding:12px;">
+                            <input type="text" id="variant-input" class="input-field" placeholder="e.g. 1.5 L, 5 kg" style="padding:12px;">
                             <button class="btn btn-secondary btn-small" onclick="addVariant()">Add</button>
                         </div>
                     </div>
@@ -415,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         `).join('')}
                     </div>
-                    <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+                    <button class="btn btn-primary" onclick="saveProduct()">Save Item</button>
                 </div>
             </div>
             `;
@@ -423,12 +378,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         selectProduct: () => {
             const { products } = state.data;
-            const pIndex = state.tempOrderSelection.productIndex;
+            const selection = state.tempOrderSelection;
+            const pIndex = selection.productIndex;
             const p = products[pIndex];
             
             window.changeProduct = (idx) => {
-                state.tempOrderSelection.productIndex = idx;
-                state.tempOrderSelection.variant = products[idx].variants[0];
+                if (idx === -1) {
+                    state.tempOrderSelection.isCustom = true;
+                } else {
+                    state.tempOrderSelection.isCustom = false;
+                    state.tempOrderSelection.productIndex = idx;
+                    state.tempOrderSelection.variant = products[idx].variants[0];
+                }
                 renderModal('selectProduct');
             };
             window.changeVariant = (v) => {
@@ -436,11 +397,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderModal('selectProduct');
             };
             window.confirmAddCart = () => {
-                state.cart.push({
-                    productName: products[state.tempOrderSelection.productIndex].name,
-                    variant: state.tempOrderSelection.variant,
-                    qty: state.tempOrderSelection.qty
-                });
+                if (selection.isCustom) {
+                    if (!selection.customName) return alert("Enter item name");
+                    state.cart.push({
+                        productName: selection.customName,
+                        variant: selection.customVariant,
+                        qty: selection.qty
+                    });
+                } else {
+                    state.cart.push({
+                        productName: products[selection.productIndex].name,
+                        variant: selection.variant,
+                        qty: selection.qty
+                    });
+                }
                 closeModal();
                 render();
             };
@@ -449,23 +419,38 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="modal-overlay">
                 <div class="modal-content fade-in">
                     <div class="modal-header">
-                        <div class="modal-title">Select Product</div>
+                        <div class="modal-title">Select Item</div>
                         <div class="modal-close" onclick="closeModal()">×</div>
                     </div>
+                    
                     <div class="input-group">
-                        <label class="input-label">Product</label>
+                        <label class="input-label">Item</label>
                         <select class="input-field" onchange="changeProduct(parseInt(this.value))">
-                            ${products.map((prod, idx) => `<option value="${idx}" ${idx === pIndex ? 'selected' : ''}>${prod.name}</option>`).join('')}
+                            ${products.map((prod, idx) => `<option value="${idx}" ${!selection.isCustom && idx === pIndex ? 'selected' : ''}>${prod.name}</option>`).join('')}
+                            <option value="-1" ${selection.isCustom ? 'selected' : ''} style="font-weight:bold;">+ Add Custom Item...</option>
                         </select>
                     </div>
-                    <div class="input-group">
-                        <label class="input-label">Variant / Size</label>
-                        <div class="variant-chips">
-                            ${p.variants.map(v => `
-                                <div class="chip ${state.tempOrderSelection.variant === v ? 'active' : ''}" onclick="changeVariant('${v}')">${v}</div>
-                            `).join('')}
+
+                    ${selection.isCustom ? `
+                        <div class="input-group fade-in">
+                            <label class="input-label">Custom Item Name</label>
+                            <input type="text" class="input-field" placeholder="e.g. Local Biscuits" value="${selection.customName}" onchange="state.tempOrderSelection.customName=this.value">
                         </div>
-                    </div>
+                        <div class="input-group fade-in">
+                            <label class="input-label">Size / Variant (Optional)</label>
+                            <input type="text" class="input-field" placeholder="e.g. 1 Box" value="${selection.customVariant}" onchange="state.tempOrderSelection.customVariant=this.value">
+                        </div>
+                    ` : `
+                        <div class="input-group fade-in">
+                            <label class="input-label">Variant / Size</label>
+                            <div class="variant-chips">
+                                ${p ? p.variants.map(v => `
+                                    <div class="chip ${selection.variant === v ? 'active' : ''}" onclick="changeVariant('${v}')">${v}</div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `}
+
                     <div class="input-group" style="margin-top:24px;">
                         <label class="input-label">Quantity</label>
                         <div class="qty-control" style="width:100%; justify-content:center; padding:10px;">
