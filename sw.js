@@ -1,9 +1,9 @@
-const CACHE_NAME = 'dawood-pwa-v6';
+const CACHE_NAME = 'dawood-pwa-v7';
 const urlsToCache = [
   './',
   './index.html',
-  './style.css?v=6',
-  './app.js?v=6',
+  './style.css?v=7',
+  './app.js?v=7',
   './manifest.json'
 ];
 

@@ -120,7 +120,13 @@ document.addEventListener('DOMContentLoaded', () => {
             languageLabel: "زبان (Language)",
             pendingStatus: "پینڈنگ",
             deliveredStatus: "ڈیلیورڈ",
-            itemVolumeLabel: "سائز / پیکنگ"
+            itemVolumeLabel: "سائز / پیکنگ",
+            orderActionsTitle: "آرڈر کے اختیارات",
+            markDelivered: "ڈیلیورڈ مارک کریں",
+            markPending: "پینڈنگ مارک کریں",
+            resendWhatsapp: "واٹس ایپ پر دوبارہ بھیجیں",
+            deleteOrder: "آرڈر ڈیلیٹ کریں",
+            deleteOrderConfirm: "کیا آپ واقعی یہ آرڈر ڈیلیٹ کرنا چاہتے ہیں؟"
         },
         en: {
             dashboard: "Dashboard",
@@ -187,7 +193,13 @@ document.addEventListener('DOMContentLoaded', () => {
             languageLabel: "Language",
             pendingStatus: "Pending",
             deliveredStatus: "Delivered",
-            itemVolumeLabel: "Variants / Sizes"
+            itemVolumeLabel: "Variants / Sizes",
+            orderActionsTitle: "Order Options",
+            markDelivered: "Mark as Delivered",
+            markPending: "Mark as Pending",
+            resendWhatsapp: "Resend via WhatsApp",
+            deleteOrder: "Delete Order",
+            deleteOrderConfirm: "Are you sure you want to delete this order?"
         }
     };
 
@@ -434,6 +446,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         orders: () => {
             const { orders } = state.data;
+            window.openOrderActions = (id) => {
+                state.tempOrderId = id;
+                renderModal('orderActions');
+            };
             return `
             <div class="fade-in">
                 ${getHeader(t('orderHistory'))}
@@ -441,15 +457,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${orders.length === 0 ? `<div class="empty-state">${t('noOrdersHistory')}</div>` : ''}
                     ${orders.slice().reverse().map(order => `
                         <div class="list-item" style="flex-direction:column; align-items:stretch;">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
-                                <div style="display:flex; gap:16px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:16px; align-items:center;">
+                                <div style="display:flex; gap:16px; align-items:center;">
                                     <div class="item-icon">${order.shop.charAt(0)}</div>
                                     <div>
                                         <div style="font-weight:700; font-size:18px;">${order.shop}</div>
                                         <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${order.date}</div>
                                     </div>
                                 </div>
-                                <div style="font-weight:700; color:var(--primary-color); font-size:14px;">${order.status === 'Pending' ? t('pendingStatus') : t('deliveredStatus')}</div>
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="font-weight:700; color:var(--primary-color); font-size:14px;">${order.status === 'Pending' ? t('pendingStatus') : t('deliveredStatus')}</div>
+                                    <div style="font-size:24px; color:var(--text-secondary); cursor:pointer; padding:0 8px; line-height:1;" onclick="openOrderActions('${order.id}')">⋮</div>
+                                </div>
                             </div>
                             <div style="background:#2c2c2e; padding:16px; border-radius:12px; font-size:14px; line-height:1.8;">
                                 ${order.items.map(i => `<div style="font-weight:500;">• ${i.productName} ${i.variant ? '('+i.variant+')' : ''} ${t('qtyLabel')}: ${i.qty}</div>`).join('')}
@@ -722,7 +741,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <option value="-1" ${selection.isCustom ? 'selected' : ''} style="font-weight:bold;">${t('customItemOption')}</option>
                         </select>
                     </div>
-
+ 
                     ${selection.isCustom ? `
                         <div class="input-group fade-in">
                             <label class="input-label">${t('customItemNameLabel')}</label>
@@ -742,7 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     `}
-
+ 
                     <div class="input-group" style="margin-top:24px;">
                         <label class="input-label">تعداد</label>
                         <div class="qty-control" style="width:100%; justify-content:center; padding:12px;">
@@ -752,6 +771,84 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <button class="btn btn-primary" style="margin-top:24px;" onclick="confirmAddCart()">آرڈر میں شامل کریں</button>
+                </div>
+            </div>
+            `;
+        },
+        orderActions: () => {
+            const orderId = state.tempOrderId;
+            const order = state.data.orders.find(o => o.id === orderId);
+            if (!order) return '';
+
+            window.toggleOrderStatus = () => {
+                order.status = order.status === 'Pending' ? 'Delivered' : 'Pending';
+                saveData();
+                closeModal();
+                render();
+            };
+
+            window.resendOrderWhatsApp = () => {
+                let text = t('whatsappNewBooking') + "\n\n";
+                text += t('whatsappSalesman') + " " + state.data.settings.salesmanName + "\n\n";
+                text += t('whatsappShopName') + "\n" + order.shop + "\n\n";
+                if(order.phone) text += t('whatsappPhone') + "\n" + order.phone + "\n\n";
+                if(order.address) text += t('whatsappAddress') + "\n" + order.address + "\n\n";
+                
+                text += t('whatsappOrderDetails') + "\n";
+                order.items.forEach((item) => {
+                    text += "• " + item.productName + " " + (item.variant ? '('+item.variant+')' : '') + " " + t('whatsappQty') + ": " + item.qty + "\n";
+                });
+                text += "\n" + t('whatsappPrepareDispatch');
+
+                let phone = state.data.settings.ownerPhone;
+                phone = phone.replace(/[^0-9+]/g, '');
+                
+                const encodedText = encodeURIComponent(text);
+                const waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedText}`;
+                const a = document.createElement('a');
+                a.href = waUrl;
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    closeModal();
+                }, 100);
+            };
+
+            window.deleteOrderRecord = () => {
+                if (confirm(t('deleteOrderConfirm'))) {
+                    state.data.orders = state.data.orders.filter(o => o.id !== orderId);
+                    saveData();
+                    closeModal();
+                    render();
+                }
+            };
+
+            return `
+            <div class="modal-overlay">
+                <div class="modal-content fade-in">
+                    <div class="modal-header">
+                        <div class="modal-title">${t('orderActionsTitle')}</div>
+                        <div class="modal-close" onclick="closeModal()">×</div>
+                    </div>
+                    <div style="margin-bottom:24px;">
+                        <div style="font-weight:700; font-size:18px; margin-bottom:4px;">${order.shop}</div>
+                        <div style="font-size:13px; color:var(--text-secondary);">${order.date} • ${order.items.length} ${t('qtyLabel')}</div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <button class="btn btn-secondary" onclick="toggleOrderStatus()">
+                            ${order.status === 'Pending' ? t('markDelivered') : t('markPending')}
+                        </button>
+                        <button class="btn btn-secondary" onclick="resendOrderWhatsApp()">
+                            <div class="icon-whatsapp" style="display:inline-block; vertical-align:middle; width:20px; height:20px; background:currentColor; margin-right:8px; margin-left:8px;"></div>
+                            ${t('resendWhatsapp')}
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteOrderRecord()">
+                            ${t('deleteOrder')}
+                        </button>
+                    </div>
                 </div>
             </div>
             `;
