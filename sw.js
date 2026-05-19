@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dawood-pwa-v5';
+const CACHE_NAME = 'dawood-pwa-v6';
 const urlsToCache = [
   './',
   './index.html',
