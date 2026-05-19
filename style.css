@@ -111,7 +111,7 @@ select.input-field {
 .stat-value { font-size: 28px; font-weight: 800; }
 
 /* Lists & Cards */
-.list-section { padding: 20px; }
+.list-section { padding: 20px; padding-bottom: 110px; }
 .list-item { background: var(--card-bg); padding: 18px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 .item-icon { width: 48px; height: 48px; background: #2c2c2e; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: 700; font-size: 20px; flex-shrink: 0;}
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text-secondary); font-size: 15px; }
