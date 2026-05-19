@@ -15,7 +15,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Noto Sans Arabic', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -161,4 +161,23 @@ select.input-field {
     position: fixed; top: max(16px, env(safe-area-inset-top)); left: 16px; right: 16px; background: rgba(20, 20, 22, 0.95);
     backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
     padding: 16px; display: flex; justify-content: space-between; align-items: center; z-index: 9999; box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+}
+
+/* RTL (Urdu) Overrides */
+html[dir="rtl"] #app {
+    text-align: right;
+}
+html[dir="rtl"] select.input-field {
+    background-position: left 1.2rem top 50%;
+}
+html[dir="rtl"] .remove-item {
+    right: auto;
+    left: 18px;
+}
+html[dir="rtl"] .variant-tag {
+    margin: 0 0 10px 10px;
+}
+html[dir="rtl"] .variant-tag-close {
+    margin-left: 0;
+    margin-right: 4px;
 }
