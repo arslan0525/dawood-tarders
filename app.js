@@ -1,4 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const banner = document.getElementById('install-banner');
+        if(banner) banner.style.display = 'flex';
+    });
+
+    const installBtn = document.getElementById('install-btn');
+    if(installBtn) {
+        installBtn.addEventListener('click', async () => {
+            const banner = document.getElementById('install-banner');
+            banner.style.display = 'none';
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            }
+        });
+    }
+
     const app = document.getElementById('app');
 
     const defaultData = {
