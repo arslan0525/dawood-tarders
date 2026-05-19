@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('dawood_data', JSON.stringify(defaultData));
     }
 
-    const state = {
+    window.state = {
         data: JSON.parse(localStorage.getItem('dawood_data')),
         currentScreen: 'dashboard',
         cart: [],
@@ -23,10 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
         tempProduct: { name: '', category: '', variants: [] },
         tempOrderSelection: { productIndex: -1, variant: '', qty: 1, isCustom: false }
     };
+    const state = window.state;
 
-    const saveData = () => {
+    window.saveData = () => {
         localStorage.setItem('dawood_data', JSON.stringify(state.data));
     };
+    const saveData = window.saveData;
 
     window.navigate = (screen) => {
         state.currentScreen = screen;
