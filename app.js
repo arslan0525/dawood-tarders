@@ -241,17 +241,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(!shopName) return alert("Please enter Shop Name");
                 if(state.cart.length === 0) return alert("Please add at least one item to the order");
                 
-                let text = `📦 *New Booking*\n\n`;
-                text += `👤 *Salesman:* ${state.data.settings.salesmanName}\n\n`;
-                text += `🏪 *Shop Name:*\n${shopName}\n\n`;
-                if(shopPhone) text += `📞 *Phone:*\n${shopPhone}\n\n`;
-                if(address) text += `📍 *Address:*\n${address}\n\n`;
+                let text = \`📦 *New Booking*\\n\\n\`;
+                text += \`👤 *Salesman:* \${state.data.settings.salesmanName}\\n\\n\`;
+                text += \`🏪 *Shop Name:*\\n\${shopName}\\n\\n\`;
+                if(shopPhone) text += \`📞 *Phone:*\\n\${shopPhone}\\n\\n\`;
+                if(address) text += \`📍 *Address:*\\n\${address}\\n\\n\`;
                 
-                text += `🛒 *Order Details:*\n`;
+                text += \`🛒 *Order Details:*\\n\`;
                 state.cart.forEach((item) => {
-                    text += `• ${item.productName} ${item.variant ? '('+item.variant+')' : ''} x${item.qty}\n`;
+                    text += \`• \${item.productName} \${item.variant ? '('+item.variant+')' : ''} x\${item.qty}\\n\`;
                 });
-                text += `\n🚚 *Please Prepare Dispatch*`;
+                text += \`\\n🚚 *Please Prepare Dispatch*\`;
 
                 const newOrder = {
                     id: Date.now().toString().slice(-4),
@@ -271,9 +271,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Remove all non-numeric characters (except leading +)
                 phone = phone.replace(/[^0-9+]/g, '');
                 
-                // standard way to open WhatsApp
+                // Deep link fallback for strict mobile browsers
                 const encodedText = encodeURIComponent(text);
-                window.location.href = \`https://wa.me/\${phone}?text=\${encodedText}\`;
+                const waUrl = \`https://api.whatsapp.com/send?phone=\${phone}&text=\${encodedText}\`;
+                const a = document.createElement('a');
+                a.href = waUrl;
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    navigate('dashboard');
+                }, 100);
             };
 
             return `

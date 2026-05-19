@@ -3,22 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#0d0d0d" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Dawood Trader" />
+  
+  <!-- SEO Optimization -->
   <title>Dawood Trader — Wholesale Order Management</title>
-  <meta name="description" content="Premium wholesale order management for salesmen and shop owners." />
-  <link rel="manifest" href="manifest.json" />
+  <meta name="description" content="Premium wholesale order management application for salesmen and shop owners. Fast, reliable, and mobile-friendly booking system." />
+  <meta name="keywords" content="wholesale, order management, b2b, dawood trader, pos, booking app, salesman app" />
+  <meta name="author" content="Dawood Trader" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Dawood Trader — Wholesale Order Management" />
+  <meta property="og:description" content="Fastest wholesale order management and booking application." />
+  <meta property="og:site_name" content="Dawood Trader" />
+  
+  <!-- Performance Optimization: Preconnect & Async Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
+  
+  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
+  
+  <!-- Schema Markup (JSON-LD) for better Google Search Indexing -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Dawood Trader",
+    "description": "Premium wholesale order management application for salesmen and shop owners.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "PKR"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Dawood Traders"
+    }
+  }
+  </script>
 </head>
 <body>
   <div id="app">
-    <!-- Screens injected by JS -->
+    <!-- UI Screens injected by JS -->
   </div>
-  <script src="app.js"></script>
+  <!-- Defer loading of JS for better render speed -->
+  <script src="app.js" defer></script>
 </body>
 </html>
